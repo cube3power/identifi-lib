@@ -47,7 +47,7 @@ describe('local index', async () => {
   let i, h;
   test('create new Index', async () => {
     key = await identifi.Key.getDefault();
-    i = await identifi.Index.create(gun.get(`identifi`));
+    i = await identifi.Index.create(gun);
     expect(i).toBeInstanceOf(identifi.Index);
   });
   let p;

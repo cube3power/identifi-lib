@@ -18,12 +18,14 @@ class Index {
     this.gun = gun || new Gun();
   }
 
-  static async create(gun: Object, viewpoint: Attribute) {
-    const i = new Index(gun);
-    if (!viewpoint) {
-      const defaultKey = await Key.getDefault();
-      viewpoint = {name: `keyID`, val: await Key.getId(defaultKey), conf: 1, ref: 0};
+  static async create(gun: Object, keypair: Object) {
+    if (!keypair) {
+      keypair = await Key.getDefault();
     }
+    const user = gun.user();
+    user.auth(keypair);
+    const i = new Index(user.get(`identifi`));
+    const viewpoint = {name: `keyID`, val: await Key.getId(keypair), conf: 1, ref: 0};
     await i.gun.get(`viewpoint`).put(new Attribute(viewpoint));
     const vp = Identity.create(i.gun.get(`identities`), {attrs: [viewpoint], trustDistance: 0});
     await i._addIdentityToIndexes(vp.gun);
